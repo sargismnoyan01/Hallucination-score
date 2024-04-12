@@ -30,11 +30,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.task == "wikibio":
         Show(args.task, args.model_path, args.only_keyword, args.use_penalty, args.add_type, args.use_entropy, args.use_idf, args.gamma, args.rho, args.low_cpu_mem_usage)
-        outputs =  "Mackenzie Caquatto is an American former artistic gymnast, who competed at the 2012 Olympics Games in London. Caquatto was born in 1992, and began gymnastics at the age of three. She competed on the uneven bars and balance beam at the 2012 Summer Olympics."
+        outputs =  input("Enter the text \n >>").strip()
         t = WikiBioTask(args)
         outputs = t.add_type(outputs)
         words,losses = t.run_generate(prompt=outputs,gamma = 0.9)
-        sentence_loss = t.all_text(words,losses)
-        print(f"{100 * np.mean(t.Norm(sentence_loss))}%")
-
-
+        if '.' in outputs[:-1] or '?' in outputs[:-1] or '!' in outputs[:-1]:
+          sentence_loss = t.Text(words,losses)
+          print(f"{100 * np.mean(t.Norm(sentence_loss))}%")
+        else:
+          print(f"{100 * np.mean(t.Norm(losses))}%")

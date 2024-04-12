@@ -166,6 +166,7 @@ class WikiBioTask:
                             l += loss[loss_index].item() if loss_index >= 0 else 0
                             num += 1
                             memo[loss_index] = True
+                
 
                     losses.append(l / num)
                     if words[-1] == self.right_mark and (words[-2] in self.NER_type + self.pos_tag) and words[-3] == self.left_mark:
@@ -206,3 +207,29 @@ class WikiBioTask:
         print(sentence_score)
         print(passage_score)
         return sentence_score, passage_score
+    def Norm(self,x):
+      norm = np.linalg.norm(x)
+      #print(norm)
+
+
+      x = x / norm
+      return x
+
+
+
+
+    def Text(self, text: list, numbers: list):
+        sentence = []
+        k = 0
+        Count = 0
+        for i in range(len(text)):
+            if text[i] == '.' or text[i] == '!' or text[i] == '?':
+                for j in range(k, i):
+                    if numbers[j] != 0:
+                      Count += 1
+                if Count != 0:
+                    sentence.append(sum(numbers[k:i]) / Count)
+                else:
+                    sentence.append(0)  
+                k = i
+        return sentence
