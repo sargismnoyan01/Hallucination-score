@@ -4,7 +4,6 @@ import torch.nn as nn
 import numpy as np
 
 def Show(task, model_path, only_keyword=False, use_penalty=True, add_type=True, use_entropy=True, use_idf=True, gamma=0.9, rho=0.01, low_cpu_mem_usage=True):
-    # Your main code logic here
     print("Task:", task)
     print("Model Path:", model_path)
     print("Only Keyword:", only_keyword)
@@ -34,17 +33,8 @@ if __name__ == "__main__":
         outputs =  "Mackenzie Caquatto is an American former artistic gymnast, who competed at the 2012 Olympics Games in London. Caquatto was born in 1992, and began gymnastics at the age of three. She competed on the uneven bars and balance beam at the 2012 Summer Olympics."
         t = WikiBioTask(args)
         outputs = t.add_type(outputs)
-        #print(outputs)
         words,losses = t.run_generate(prompt=outputs,gamma = 0.9)
-        #print(words)
-        #print(len(words))
-        #losses = softmax(losses)
-        #print(losses)
-        #print(len(losses))
         sentence_loss = t.all_text(words,losses)
-        #print(sentence_loss)
-        #sentence_loss = nn.Softmax(sentence_loss)
-        #print(sentence_loss)
         print(f"{100 * np.mean(t.Norm(sentence_loss))}%")
 
 
