@@ -66,7 +66,7 @@ class WikiBioTask:
       x = x / norm
       return x
 
-    def softmax(self,values):
+    def Softmax(self,values):
 
         norm = np.linalg.norm(values)
         #print(norm)
@@ -83,21 +83,19 @@ class WikiBioTask:
         #print(exp_values/exp_values_sum)
         return exp_values/exp_values_sum
 
-    def all_text(self, text: list, numbers: list):
+    def Text(self, text: list, numbers: list):
         sentence = []
         k = 0
+        Count = 0
         for i in range(len(text)):
-            Count = 0
             if text[i] == '.' or text[i] == '!' or text[i] == '?':
                 for j in range(k, i):
                     if numbers[j] != 0:
-                        Count += 1
-                # Check if Count is not zero before performing division
+                      Count += 1
                 if Count != 0:
                     sentence.append(sum(numbers[k:i]) / Count)
                 else:
-                    # Append zero or handle appropriately when Count is zero
-                    sentence.append(0)  # For example, append zero
+                    sentence.append(0)  
                 k = i
         return sentence
 
@@ -166,7 +164,6 @@ class WikiBioTask:
                             l += loss[loss_index].item() if loss_index >= 0 else 0
                             num += 1
                             memo[loss_index] = True
-                
 
                     losses.append(l / num)
                     if words[-1] == self.right_mark and (words[-2] in self.NER_type + self.pos_tag) and words[-3] == self.left_mark:
@@ -175,10 +172,11 @@ class WikiBioTask:
             return words, losses
 
     def evaluate(self, concept, response, max_score=30.):
-        passage = f"Please complete the passage below using appropriate words that follow to the given type with < > wrapped.\n{self.add_type(self.prompt(concept))}{self.add_type(self.text(response))}" if self.args.add_type else f"{self.prompt(concept)}{self.text(response)}"
+        passage = f"{self.add_type(self.prompt(concept))}{self.add_type(self.text(response))}" if self.args.add_type else f"{self.prompt(concept)}{self.text(response)}"
         sentences = [s.text.replace('\n', '') for s in self.nlp(self.text(response)).sents]
         words, losses = self.run_generate(passage, gamma=self.args.gamma, rm_low_prob=self.args.add_type)
         sentence_scores = []
+        sentence_weights = []
         passage_score = 0
         passage_token_num = 0
         cur = 0
@@ -186,6 +184,8 @@ class WikiBioTask:
             sentence_score = 0
             sentence_token_num = 0
             words_list = [t for t in self.nlp(s)]
+            sentence_length = len(words_list)
+            sentence_weights.append(sentence_length)
             for w in words_list:
                 if len(words) == cur:
                     print("error")
@@ -196,40 +196,17 @@ class WikiBioTask:
             passage_score += sentence_score
             passage_token_num += sentence_token_num
             sentence_scores.append(sentence_score / sentence_token_num if sentence_token_num else 0)
+        
+        sentence_score = self.Norm(sentence_scores)
+        passage_score = np.exp(np.sum([a * b for a,b in zip(np.log(sentence_score), sentence_weights)]) / np.sum(sentence_weights))
 
-        sentence_score = [min(s, max_score) / max_score for s in sentence_scores]
-        sentence_score = [(i, s) for i, s in enumerate(sentence_score)]
-        passage_score = passage_score / passage_token_num
-        passage_score = min(passage_score, max_score) / max_score
+
+        #sentence_scores = self.Softmax(sentence_scores)
+        #sentence_score = [(i, s) for i, s in enumerate(sentence_scores)]
+        #passage_score = 100 * np.exp(np.mean(np.log(sentence_scores)))
         if len(words) != cur:
             print("error")
 
-        print(sentence_score)
-        print(passage_score)
+        print(f"Sentence scores with concept provided: {sentence_score}")
+        print(f"Passage score with concept provided: {100 * passage_score:.2f}%") 
         return sentence_score, passage_score
-    def Norm(self,x):
-      norm = np.linalg.norm(x)
-      #print(norm)
-
-
-      x = x / norm
-      return x
-
-
-
-
-    def Text(self, text: list, numbers: list):
-        sentence = []
-        k = 0
-        Count = 0
-        for i in range(len(text)):
-            if text[i] == '.' or text[i] == '!' or text[i] == '?':
-                for j in range(k, i):
-                    if numbers[j] != 0:
-                      Count += 1
-                if Count != 0:
-                    sentence.append(sum(numbers[k:i]) / Count)
-                else:
-                    sentence.append(0)  
-                k = i
-        return sentence
