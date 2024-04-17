@@ -1,2 +1,24 @@
 # Hallutination-score
-UBHD
+
+Description:
+This repository contains code and resources related to hallucination scoring in natural language generation tasks. Hallucination refers to the generation of information that is not present in the input or is not factually accurate. Evaluating and mitigating hallucination is crucial for ensuring the quality and reliability of generated text in various NLP applications.
+
+Contents:
+
+Code: This directory contains scripts and notebooks for computing hallucination scores using different methodologies and datasets.
+
+Datasets: This directory includes datasets used for training and evaluating hallucination scoring models. It may contain both preprocessed datasets and scripts for data preprocessing.
+
+Models: This directory contains pre-trained hallucination scoring models, along with instructions on how to use them for scoring generated text.
+
+Documentation: This directory includes detailed documentation on how to use the code, datasets, and models provided in the repository. It may also contain explanations of the methodologies used for hallucination scoring.
+
+Usage:
+
+To compute hallucination scores for generated text, refer to the documentation for instructions on using the provided code and models.
+To train custom hallucination scoring models, utilize the datasets provided in the repository and follow the guidelines outlined in the documentation.
+
+
+
+
+
