@@ -19,6 +19,8 @@ To compute hallucination scores for generated text, refer to the documentation f
 To train custom hallucination scoring models, utilize the datasets provided in the repository and follow the guidelines outlined in the documentation.
 
 
+The names of the libraries used in the project are placed in requirements.txt
+
 
 
 
