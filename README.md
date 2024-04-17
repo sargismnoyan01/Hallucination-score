@@ -21,7 +21,7 @@ To train custom hallucination scoring models, utilize the datasets provided in t
 
 The names of the libraries used in the project are placed in requirements.txt
 
-# Are the steps needed to get the project working
+# the steps required to implement the project
 
   1. git clone https://github.com/sargismnoyan01/Hallucination-score
   2. %cd Hallucination-score/
