@@ -21,6 +21,15 @@ To train custom hallucination scoring models, utilize the datasets provided in t
 
 The names of the libraries used in the project are placed in requirements.txt
 
+# Are the steps needed to get the project working
+
+  1. git clone https://github.com/sargismnoyan01/Hallucination-score
+  2. %cd Hallucination-score/
+  3. pip install -r requirements.txt
+  4. python inference.py --model_path facebook/opt-1.3b --task wikibio --only_keyword --use_penalty --add_type --use_idf --       use_entropy --gamma 0.8 --rho 0.01
+  5. write the text․
+   
+
 
 
 
